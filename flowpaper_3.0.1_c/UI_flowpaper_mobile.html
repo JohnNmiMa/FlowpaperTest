@@ -1,0 +1,14 @@
+<div id='toolbar1' class='flowpaper_toolbar flowpaper_toolbarios'>
+    <img data-minscreenwidth="600" src='images/touch/print.png' class='flowpaper_bttnPortrait flowpaper_tbbutton_large flowpaper_print' style='margin-left:5px;' onclick='$FlowPaper("documentViewer").printPaper();'/>
+    <img data-minscreenwidth="600" src='images/touch/document.png' class='flowpaper_tbbutton_large flowpaper_tbbutton_viewmode  flowpaper_singlepage' style='margin-left:15px;' onclick='$FlowPaper("documentViewer").switchMode("Portrait")'>
+    <img data-minscreenwidth="600" src='images/touch/thumbs.png' style='margin-left:-1px;' class='flowpaper_bttnTileMode flowpaper_tbbutton_large flowpaper_tbbutton_viewmode flowpaper_thumbview' onclick='$FlowPaper("documentViewer").switchMode("Tile")' >
+    <img src='images/touch/zoomin.png' class='flowpaper_bttnZoomIn flowpaper_tbbutton_large' style='margin-left:15px;' onclick='$FlowPaper("documentViewer").ZoomIn()'/>
+    <img src='images/touch/zoomout.png' class='flowpaper_bttnZoomOut flowpaper_tbbutton_large' style='margin-left:-1px;' onclick='$FlowPaper("documentViewer").ZoomOut()' />
+    <img src='images/touch/fullscreen.png' class='flowpaper_bttnFullScreen flowpaper_tbbutton_large' style='margin-left:-1px;' onclick='jQuery("#documentViewer").showFullScreen();'/>
+    <img src='images/touch/prev.png' class='flowpaper_bttnPrevPage flowpaper_tbbutton_large flowpaper_previous' style='margin-left:15px;' onclick='$FlowPaper("documentViewer").prevPage()'/>
+    <input type='text' class='flowpaper_txtPageNumber flowpaper_tbtextinput_large flowpaper_currPageNum' value='1' style='width:80px;text-align:right;' />
+    <div class='flowpaper_lblTotalPages flowpaper_tblabel_large flowpaper_numberOfPages'> / </div>
+    <img src='images/touch/next.png'  class='flowpaper_bttnPrevNext flowpaper_tbbutton_large flowpaper_next' onclick='$FlowPaper("documentViewer").nextPage()'/>
+    <input type='text' class='flowpaper_txtSearchText flowpaper_tbtextinput_large' style='margin-left:15px;width:130px;' />
+    <img src='images/touch/search.png' class='flowpaper_bttnTextSearch flowpaper_find flowpaper_tbbutton_large' style='' onclick='$FlowPaper("documentViewer").searchText(jQuery(this).parent().find(".flowpaper_txtSearchText").val());' />
+</div>
