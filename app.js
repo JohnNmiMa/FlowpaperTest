@@ -2,15 +2,23 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 .controller('appController', function($scope) {
 
     $scope.documentUrl = 'KLSR.pdf';
-    $scope.documentId = 'documentViewer';
+    $scope.documentViewerId = 'documentViewer';
+    $scope.documentPreviewerId = 'documentPreviewer';
 
-    $scope.showDocument = false;
-    $scope.displayDocument = function() {
-        $scope.showDocument = !$scope.showDocument;
+    $scope.showFixedDocument = false;
+    $scope.displayDocument = function(isFixedSize) {
+        if (isFixedSize) {
+            // if ($scope.showFlexibleDocument) return;
+            $scope.showFixedDocument = !$scope.showFixedDocument;
+        }
+        else {
+            // if ($scope.showFixedDocument) return;
+            $scope.showFlexibleDocument = !$scope.showFlexibleDocument;
+        }
     }
 })
 
-.directive('documentViewer', ['DocumentViewingService', function(viewerSvc) {
+.directive('documentViewer', ['DocumentViewingService', '$window', function(viewerSvc, $window) {
     return {
         restrict: 'E',
         scope: {
@@ -20,20 +28,29 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
         replace: true,
         templateUrl: './newton-viewer.html',
         link: function(scope, element, attrs) {
+            var debounceResize = _.debounce(resizeDocument, 500, {'leading':true});
+
             viewerSvc.displayDocument(scope.docId, scope.docUrl);
 
+            angular.element($window).on("resize", debounceResize);
+            function resizeDocument() {
+                viewerSvc.resizeViewer(scope.docId);
+            }
+
             scope.$on('$destroy', function() {
+                angular.element($window).off("resize", debounceResize);
                 viewerSvc.destroyViewer(scope.docId);
-            })
+            });
         }
     }
 }])
 
-.factory("DocumentViewingService", ['$http', '$location', function ($http, $location) {
-    var newtonDocViewer;
+.factory("DocumentViewingService", ['$http', '$location', '$timeout', function ($http, $location, $timeout) {
+    var newtonDocViewer,
+        fitMode, FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height";
 
     var displayDocument = function(docId, pdfFile) {
-        var flowpaperRootDir = $location.protocol() + "://" + $location.host() + ':' + $location.port() + "/flowpaper_3.0.1_c/",
+        var flowpaperRootDir = $location.protocol() + "://" + $location.host() + ':' + $location.port() + "/js/flowpaper_3.0.1_c/",
             toolbarUrl = window.isTouchScreen ? flowpaperRootDir + 'UI_flowpaper_mobile_flat.html' :
                          flowpaperRootDir + 'UI_flowpaper_desktop_flat.html',
             flowpaperConfig =
@@ -43,10 +60,9 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                     RenderingOrder: 'html5',
                     FitWidthOnLoad: false,
                     WMode: 'opaque',
-                    localeChain: 'en_US',
                     InitViewMode: 'Portrait',
-                    FitPageOnLoad: true,
                     SearchMatchAll: true,
+
                     ViewModeToolsVisible: true,
                     ZoomToolsVisible: true,
                     NavToolsVisible: true,
@@ -54,24 +70,67 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                     SearchToolsVisible: true,
                     FullScreenAsMaxWindow: true,
                     jsDirectory: flowpaperRootDir + 'js/',
+
+                    localeChain: 'en_US',
                     localeDirectory: flowpaperRootDir + 'locale/'
                 };
-                // FitWidthOnLoad: true,
-                // FitPageOnLoad: true,
+
+        if (docId === 'documentViewer') {
+            fitMode = FIT_WIDTH;
+        } else if (docId === 'NewtonDocumentViewer') {
+            fitMode = FIT_HEIGHT;
+        }
+        flowpaperConfig.FitPageOnLoad = (fitMode === 'Fit Height');
+        flowpaperConfig.FitWidthOnLoad = (fitMode === 'Fit Width');
 
         $http.get(toolbarUrl).then(function(toolbarTemplate) {
+            bindDocumentLoaded(docId);
+
             flowpaperConfig.Toolbar = toolbarTemplate.data;
             // $('#documentViewer').FlowPaperViewer({config: flowpaperConfig});
             $('#'+docId).FlowPaperViewer({config: flowpaperConfig});
         })
     };
 
+    var resizeViewer = function(docId) {
+        console.log("Resize Viewer");
+        window.getDocViewer(docId).resize();
+        $timeout(function() {
+            if (fitMode === FIT_WIDTH) {
+                window.getDocViewer(docId).fitWidth();
+            } else if (fitMode === FIT_HEIGHT) {
+                window.getDocViewer(docId).fitHeight();
+            }
+        },100);
+    };
+
     var destroyViewer = function(docId) {
         window.getDocViewer(docId).dispose();
     };
 
+    // Utils
+
+    function bindDocumentLoaded(docId) {
+        // Notify when document is completely loaded
+        $('#'+docId).bind('onDocumentLoaded', function(e, totalPages) {
+            initClickHandlers(docId);
+        });
+    }
+
+    function initClickHandlers(docId) {
+        document.getElementById('toolbar_'+docId).getElementsByClassName('flowpaper_bttnFitWidth')[0].onclick = function(e) {
+            fitMode = FIT_WIDTH;
+            window.getDocViewer(docId).fitWidth();
+        };
+        document.getElementById('toolbar_'+docId).getElementsByClassName('flowpaper_bttnFitHeight')[0].onclick = function(e) {
+            fitMode = FIT_HEIGHT;
+            window.getDocViewer(docId).fitHeight();
+        };
+    }
+
     return {
         displayDocument: displayDocument,
+        resizeViewer: resizeViewer,
         destroyViewer: destroyViewer
     }
 }]);
