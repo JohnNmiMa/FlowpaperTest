@@ -44,6 +44,9 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                     FitWidthOnLoad: false,
                     WMode: 'opaque',
                     localeChain: 'en_US',
+                    InitViewMode: 'Portrait',
+                    FitPageOnLoad: true,
+                    SearchMatchAll: true,
                     ViewModeToolsVisible: true,
                     ZoomToolsVisible: true,
                     NavToolsVisible: true,
@@ -53,8 +56,8 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                     jsDirectory: flowpaperRootDir + 'js/',
                     localeDirectory: flowpaperRootDir + 'locale/'
                 };
-                // InitViewMode: 'Portrait',
                 // FitWidthOnLoad: true,
+                // FitPageOnLoad: true,
 
         $http.get(toolbarUrl).then(function(toolbarTemplate) {
             flowpaperConfig.Toolbar = toolbarTemplate.data;

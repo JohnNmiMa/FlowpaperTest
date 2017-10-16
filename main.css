@@ -3,7 +3,7 @@ body {
 }
 .viewerContainer {
     max-width:1000px;
-    height:600px;
+    height:700px;
     margin:40px auto;
 }
 .flowpaper_viewer_wrap {
@@ -12,20 +12,24 @@ body {
 }
 .flowpaper_viewer_wrap .flowpaper_viewer .flowpaper_pages {
 }
+.flowpaper_selected_default {
+    background-color: red;
+    opacity: .35;
+}
 
 .displayDocumentButton {
-    color: rgb(255,255,255);
-    background-color: rgb(52,152,219);
-    font-size: 12px;
-    line-height: 28px;
-    padding: 0 15px;
-    border: 0;
-    border-radius: 2px;
-    cursor: pointer;
-    -webkit-transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+color: rgb(255,255,255);
+background-color: rgb(52,152,219);
+font-size: 12px;
+line-height: 28px;
+padding: 0 15px;
+border: 0;
+border-radius: 2px;
+cursor: pointer;
+-webkit-transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 .displayDocumentButton:hover {
-    background-color: #58ade3;
-    border-color: #58ade3;
+background-color: #58ade3;
+border-color: #58ade3;
 }
