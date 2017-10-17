@@ -1,18 +1,17 @@
 angular.module('flowpaperTestApp', ['ngAnimate'])
 .controller('appController', function($scope) {
 
-    $scope.documentUrl = 'KLSR.pdf';
+    $scope.documentUrl = 'BusserOL.pdf';
+    $scope.documentPreviewUrl = 'KLSR.pdf';
     $scope.documentViewerId = 'documentViewer';
     $scope.documentPreviewerId = 'documentPreviewer';
 
     $scope.showFixedDocument = false;
     $scope.displayDocument = function(isFixedSize) {
         if (isFixedSize) {
-            // if ($scope.showFlexibleDocument) return;
             $scope.showFixedDocument = !$scope.showFixedDocument;
         }
         else {
-            // if ($scope.showFixedDocument) return;
             $scope.showFlexibleDocument = !$scope.showFlexibleDocument;
         }
     }
@@ -28,7 +27,7 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
         replace: true,
         templateUrl: './newton-viewer.html',
         link: function(scope, element, attrs) {
-            var debounceResize = _.debounce(resizeDocument, 500, {'leading':true});
+            var debounceResize = _.debounce(resizeDocument, 50, {'trailing':true});
 
             viewerSvc.displayDocument(scope.docId, scope.docUrl);
 
@@ -47,12 +46,14 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 
 .factory("DocumentViewingService", ['$http', '$location', '$timeout', function ($http, $location, $timeout) {
     var newtonDocViewer,
-        fitMode, FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height";
+        fitMode, FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height",
+        resizeTimer = null;
 
     var displayDocument = function(docId, pdfFile) {
         var flowpaperRootDir = $location.protocol() + "://" + $location.host() + ':' + $location.port() + "/js/flowpaper_3.0.1_c/",
-            toolbarUrl = window.isTouchScreen ? flowpaperRootDir + 'UI_flowpaper_mobile_flat.html' :
-                         flowpaperRootDir + 'UI_flowpaper_desktop_flat.html',
+            toolbarHtml = (docId === 'documentPreviewer') ? 'UI_flowpaper_desktop_flat_preview.html' : 'UI_flowpaper_desktop_flat.html',
+            toolbarMobileHtml = (docId === 'documentPreviewer') ? 'UI_flowpaper_mobile_flat_preview.html' : 'UI_flowpaper_mobile_flat.html',
+            toolbarUrl = window.isTouchScreen ? flowpaperRootDir + toolbarMobileHtml : flowpaperRootDir + toolbarHtml,
             flowpaperConfig =
                 {
                     key: '@95ab8d7b0b08c8ade3f$fd203332deebe9414df',
@@ -75,10 +76,10 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                     localeDirectory: flowpaperRootDir + 'locale/'
                 };
 
-        if (docId === 'documentViewer') {
-            fitMode = FIT_WIDTH;
-        } else if (docId === 'NewtonDocumentViewer') {
+        if (docId === 'documentPreviewer') {
             fitMode = FIT_HEIGHT;
+        } else if (docId === 'documentViewer') {
+            fitMode = FIT_WIDTH;
         }
         flowpaperConfig.FitPageOnLoad = (fitMode === 'Fit Height');
         flowpaperConfig.FitWidthOnLoad = (fitMode === 'Fit Width');
@@ -93,15 +94,15 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
     };
 
     var resizeViewer = function(docId) {
-        console.log("Resize Viewer");
         window.getDocViewer(docId).resize();
-        $timeout(function() {
+        $timeout.cancel(resizeTimer);
+        resizeTimer = $timeout(function() {
             if (fitMode === FIT_WIDTH) {
                 window.getDocViewer(docId).fitWidth();
             } else if (fitMode === FIT_HEIGHT) {
                 window.getDocViewer(docId).fitHeight();
             }
-        },100);
+        }, 150);
     };
 
     var destroyViewer = function(docId) {

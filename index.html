@@ -18,14 +18,14 @@
 
 <body ng-controller="appController">
     <button class="displayDocumentButton" ng-click="displayDocument(true)">
-        {{showDocument ? 'Remove Document' : 'Display Fixed Document'}}
+        {{showFixedDocument ? 'Remove Fixed Document' : 'Display Fixed Document'}}
     </button>
     <button class="displayDocumentButton" ng-click="displayDocument(false)">
-        {{showDocument ? 'Remove Document' : 'Display Flexible Document'}}
+        {{showFlexibleDocument ? 'Remove Flexible Document' : 'Display Flexible Document'}}
     </button>
 
     <div class="fixedSizeViewerContainer" ng-if="showFixedDocument">
-        <document-viewer doc-url="documentUrl" doc-id="{{documentPreviewerId}}"></document-viewer>
+        <document-viewer doc-url="documentPreviewUrl" doc-id="{{documentPreviewerId}}"></document-viewer>
     </div>
     <div class="flexibleViewerContainer" ng-if="showFlexibleDocument">
         <document-viewer doc-url="documentUrl" doc-id="{{documentViewerId}}"></document-viewer>
