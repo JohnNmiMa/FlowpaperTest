@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Flowpaper Prototype</title>
     <link type="text/css" rel="stylesheet" href="./js/flowpaper_3.0.1_c/css/flowpaper_flat.css">
+    <link type="text/css" rel="stylesheet" href="./button.css">
+    <link type="text/css" rel="stylesheet" href="./viewer.css">
     <link type="text/css" rel="stylesheet" href="./main.css">
     <script src="./js/angular.min.js" type="text/javascript"></script>
     <script src="./js/angular-animate.js" type="text/javascript"></script>
@@ -17,18 +19,24 @@
 </head>
 
 <body ng-controller="appController">
-    <button class="displayDocumentButton" ng-click="displayDocument(true)">
-        {{showFixedDocument ? 'Remove Fixed Document' : 'Display Fixed Document'}}
-    </button>
-    <button class="displayDocumentButton" ng-click="displayDocument(false)">
-        {{showFlexibleDocument ? 'Remove Flexible Document' : 'Display Flexible Document'}}
-    </button>
-
-    <div class="fixedSizeViewerContainer" ng-if="showFixedDocument">
-        <document-viewer doc-url="documentPreviewUrl" doc-id="{{documentPreviewerId}}"></document-viewer>
+    <div class="header">
+        <button class="displayDocumentButton" ng-click="displayDocument(true)">
+            {{showFixedDocument ? 'Remove Fixed Document' : 'Display Fixed Document'}}
+        </button>
+        <button class="displayDocumentButton" ng-click="displayDocument(false)">
+            {{showFlexibleDocument ? 'Remove Flexible Document' : 'Display Flexible Document'}}
+        </button>
     </div>
-    <div class="flexibleViewerContainer" ng-if="showFlexibleDocument">
-        <document-viewer doc-url="documentUrl" doc-id="{{documentViewerId}}"></document-viewer>
+
+    <div class="documentViewerContainer" ng-if="showFixedDocument">
+        <div class="fixedViewerContainer">
+            <document-viewer doc-url="documentPreviewUrl" doc-id="{{documentPreviewerId}}"></document-viewer>
+        </div>
+    </div>
+    <div class="documentViewerContainer" ng-if="showFlexibleDocument">
+        <div class="flexibleViewerContainer">
+            <document-viewer doc-url="documentUrl" doc-id="{{documentViewerId}}"></document-viewer>
+        </div>
     </div>
 </body>
 </html>

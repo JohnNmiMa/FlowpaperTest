@@ -24,7 +24,6 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
             docUrl: '=',
             docId: '@'
         },
-        replace: true,
         templateUrl: './newton-viewer.html',
         link: function(scope, element, attrs) {
             var debounceResize = _.debounce(resizeDocument, 50, {'trailing':true});
@@ -46,7 +45,7 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 
 .factory("DocumentViewingService", ['$http', '$location', '$timeout', function ($http, $location, $timeout) {
     var newtonDocViewer,
-        fitMode, FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height",
+        FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height", fitMode,
         resizeTimer = null;
 
     var displayDocument = function(docId, pdfFile) {
@@ -63,6 +62,8 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                     WMode: 'opaque',
                     InitViewMode: 'Portrait',
                     SearchMatchAll: true,
+                    ProgressiveLoading: false,
+                    MaxZoomSize: 3,
 
                     ViewModeToolsVisible: true,
                     ZoomToolsVisible: true,
@@ -77,18 +78,17 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                 };
 
         if (docId === 'documentPreviewer') {
-            fitMode = FIT_HEIGHT;
+            fitMode = FIT_WIDTH;
         } else if (docId === 'documentViewer') {
             fitMode = FIT_WIDTH;
         }
-        flowpaperConfig.FitPageOnLoad = (fitMode === 'Fit Height');
-        flowpaperConfig.FitWidthOnLoad = (fitMode === 'Fit Width');
+        flowpaperConfig.FitWidthOnLoad = (fitMode === FIT_WIDTH);
+        flowpaperConfig.FitPageOnLoad = (fitMode === FIT_HEIGHT);
 
         $http.get(toolbarUrl).then(function(toolbarTemplate) {
             bindDocumentLoaded(docId);
 
             flowpaperConfig.Toolbar = toolbarTemplate.data;
-            // $('#documentViewer').FlowPaperViewer({config: flowpaperConfig});
             $('#'+docId).FlowPaperViewer({config: flowpaperConfig});
         })
     };

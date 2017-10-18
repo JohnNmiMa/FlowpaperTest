@@ -1,74 +1,20 @@
-body {
-    font-family: 'Arimo', "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-.fixedSizeViewerContainer {
-    max-width:700px;
-    height:800px;
-    margin:40px auto;
-}
-.fixedSizeViewerContainer .flowpaper_viewer_wrap {
-    height:100%!important;
-}
-.fixedSizeViewerContainer .flowpaper_viewer_wrap .flowpaper_viewer {
-    height:calc(100% - 35px)!important;
-}
-.fixedSizeViewerContainer .flowpaper_viewer_wrap .flowpaper_viewer .flowpaper_pages {
-}
-
-.flexibleViewerContainer {
-    max-width:1100px;
-    width:100%;
+html, body {
+    margin:0;
+    padding:0;
     height:100%;
-    margin:40px auto;
-}
-.flexibleViewerContainer .flowpaper_viewer_wrap {
-}
-.flexibleViewerContainer .flowpaper_viewer_wrap .flowpaper_viewer {
-}
-.flexibleViewerContainer .flowpaper_viewer_wrap .flowpaper_viewer .flowpaper_pages {
-}
-
-.flowpaper_viewer_wrap .flowpaper_viewer .flowpaper_pages {
-    width:100%!important;
-}
-
-.flowpaper_selected_default {
-    background-color: red;
-    opacity: .35;
-}
-.flowpaper_viewer {
-    border-left:1px solid #777;
-    border-right:1px solid #777;
+    font-family: 'Arimo', "Helvetica Neue", Helvetica, Arial, sans-serif;
     box-sizing: border-box;
 }
-.flowpaper_pages {
-    border:none;
-}
-.flowpaper_page {
-    width:calc(100% - 20px)!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
-}
-.flowpaper_grab,  div[id^="dummyPage_"] {
-    /*width:100%!important; // Don't do this for fit height mode; will scale the document incorrectly */
-    width:100%!important;
-    margin:0 auto!important;
+
+.header {
+    height:28px;
+    margin: 10px 20px;
 }
 
-.displayDocumentButton {
-    color: rgb(255,255,255);
-    background-color: rgb(52,152,219);
-    font-size: 12px;
-    line-height: 28px;
-    padding: 0 15px;
-    border: 0;
-    border-radius: 2px;
-    margin: 0 10px;
-    cursor: pointer;
-    -webkit-transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-.displayDocumentButton:hover {
-background-color: #58ade3;
-border-color: #58ade3;
+.documentViewerContainer {
+    height:calc(100% - 58px);
+    margin:0 10px 10px;
+    border: 2px solid #58ade3;
+    border-radius: 3px;
+    overflow:hidden;
 }
