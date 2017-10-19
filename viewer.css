@@ -36,3 +36,27 @@
     opacity: .35;
 }
 
+/* Toolbar */
+div[id^="toolbar_"] {
+    border-top:none;
+    border-left:none;
+    border-right:none;
+    border-color:#ccd3d8!important;
+    background-color:#F9F9F9!important;
+}
+
+.flowpaper_tbbutton { background-color:#F9F9F9; }
+
+/*.flowpaper_toolbar_mixin;*/
+.flowpaper_tbbutton:hover { border:1px solid transparent; background-color:#dedede; }
+.flowpaper_tbbutton_pressed { background-color:#dedede; }
+.flowpaper_tbtextinput { height:20px; font-size:10px; padding:3px; }
+.flowpaper_bttnPrevPage { padding-right: 5px; }
+.flowpaper_bttnPrevNext { padding-left: 0; }
+.flowpaper_slider { margin-left:10px;}
+.flowpaper_tbseparator { margin: 0 2px; }
+.flowpaper_lblTotalPages { width: inherit; margin-top:11px;}
+.flowpaper_txtSearch { margin-right:6px;}
+.flowpaper_txtZoomFactor { width: 38px!important; }
+.flowpaper_txtPageNumber { width: 25px!important; }
+

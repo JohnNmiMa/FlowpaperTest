@@ -45,8 +45,8 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 
 .factory("DocumentViewingService", ['$http', '$location', '$timeout', function ($http, $location, $timeout) {
     var newtonDocViewer,
-        FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height", fitMode,
-        resizeTimer = null;
+        FIT_WIDTH = "Fit Width", FIT_HEIGHT = "Fit Height", FIT_NONE = "Fit None",
+        fitMode = {};
 
     var displayDocument = function(docId, pdfFile) {
         var flowpaperRootDir = $location.protocol() + "://" + $location.host() + ':' + $location.port() + "/js/flowpaper_3.0.1_c/",
@@ -78,12 +78,12 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
                 };
 
         if (docId === 'documentPreviewer') {
-            fitMode = FIT_WIDTH;
+            setFitMode(docId, FIT_WIDTH);
         } else if (docId === 'documentViewer') {
-            fitMode = FIT_WIDTH;
+            setFitMode(docId, FIT_WIDTH);
         }
-        flowpaperConfig.FitWidthOnLoad = (fitMode === FIT_WIDTH);
-        flowpaperConfig.FitPageOnLoad = (fitMode === FIT_HEIGHT);
+        flowpaperConfig.FitWidthOnLoad = (getFitMode(docId) === FIT_WIDTH);
+        flowpaperConfig.FitPageOnLoad = (getFitMode(docId) === FIT_HEIGHT);
 
         $http.get(toolbarUrl).then(function(toolbarTemplate) {
             bindDocumentLoaded(docId);
@@ -95,8 +95,8 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 
     var resizeViewer = function(docId) {
         window.getDocViewer(docId).resize();
-        $timeout.cancel(resizeTimer);
-        resizeTimer = $timeout(function() {
+        $timeout(function() {
+            var fitMode = getFitMode(docId);
             if (fitMode === FIT_WIDTH) {
                 window.getDocViewer(docId).fitWidth();
             } else if (fitMode === FIT_HEIGHT) {
@@ -107,9 +107,17 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 
     var destroyViewer = function(docId) {
         window.getDocViewer(docId).dispose();
+        delete fitMode[docId];
     };
 
     // Utils
+
+    function getFitMode(docId) {
+        return fitMode[docId];
+    }
+    function setFitMode(docId, mode) {
+        fitMode[docId] = mode;
+    }
 
     function bindDocumentLoaded(docId) {
         // Notify when document is completely loaded
@@ -120,12 +128,20 @@ angular.module('flowpaperTestApp', ['ngAnimate'])
 
     function initClickHandlers(docId) {
         document.getElementById('toolbar_'+docId).getElementsByClassName('flowpaper_bttnFitWidth')[0].onclick = function(e) {
-            fitMode = FIT_WIDTH;
+            setFitMode(docId, FIT_WIDTH);
             window.getDocViewer(docId).fitWidth();
         };
         document.getElementById('toolbar_'+docId).getElementsByClassName('flowpaper_bttnFitHeight')[0].onclick = function(e) {
-            fitMode = FIT_HEIGHT;
+            setFitMode(docId, FIT_HEIGHT);
             window.getDocViewer(docId).fitHeight();
+        };
+        document.getElementById('toolbar_'+docId).getElementsByClassName('flowpaper_tbzoomout')[0].onclick = function(e) {
+            setFitMode(docId, FIT_NONE);
+            window.getDocViewer(docId).ZoomOut();
+        };
+        document.getElementById('toolbar_'+docId).getElementsByClassName('flowpaper_tbzoomin')[0].onclick = function(e) {
+            setFitMode(docId, FIT_NONE);
+            window.getDocViewer(docId).ZoomIn();
         };
     }
 
